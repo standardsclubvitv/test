@@ -2,7 +2,8 @@ import express from "express";
 // import cors from "cors";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
-
+import path from "path";
+import { fileURLToPath } from 'url';
 dotenv.config();
 
 const app = express();
@@ -11,6 +12,8 @@ const app = express();
 // app.use(cors());
 
 // ✅ Allow JSON parsing
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -128,6 +131,6 @@ app.post("/send-email", async (req, res) => {
 });
 
 // ✅ Start Server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5300;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
