@@ -15,6 +15,12 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(express.json());
+app.use(cors({
+  origin: 'https://standardsclubvitv.github.io', // Use this exact URL
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -136,8 +142,3 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
 // Enable CORS for your frontend domain
-app.use(cors({
-    origin: "https://standardsclubvitv.github.io/Standards-Club-VITv/", // Replace with your actual frontend domain
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type,Authorization"
-}));
