@@ -1,5 +1,5 @@
 import express from "express";
-// import cors from "cors";
+import cors from "cors";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import path from "path";
@@ -134,3 +134,10 @@ app.post("/send-email", async (req, res) => {
 const PORT = process.env.PORT || 5300;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
+
+// Enable CORS for your frontend domain
+app.use(cors({
+    origin: "https://standardsclubvitv.github.io/Standards-Club-VITv/", // Replace with your actual frontend domain
+    methods: "GET,POST,PUT,DELETE",
+    allowedHeaders: "Content-Type,Authorization"
+}));
