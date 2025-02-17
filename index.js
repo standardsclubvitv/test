@@ -259,7 +259,7 @@ app.post("/send-email", async (req, res) => {
     <body>
         <div class="email-container">
             <div class="email-header">
-                <h2>🎉 Registration Confirmed: ${eventName}</h2>
+                <h4>🎉 Registration Confirmed: ${eventName}</h4>
             </div>
             <div class="event-info">
                 <p><span class="highlight">Event:</span> ${eventName}</p>
