@@ -16,9 +16,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use(express.json());
 app.use(cors({
-  origin: 'https://standardsclubvitv.github.io', // Use this exact URL
-  methods: ['GET', 'POST'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: 'https://standardsclubvitv.github.io', // Use this exact URL
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
 app.get('/', (req, res) => {
@@ -92,13 +92,13 @@ app.post("/send-welcome-email", async (req, res) => {
 // ✅ Send Board Login Alert
 app.post("/send-board-login-alert", async (req, res) => {
     const { email, device, ip, dateTime } = req.body;
-console.log(email, device, ip, dateTime)
+    console.log(email, device, ip, dateTime)
     try {
         await transporter.sendMail({
-    from: process.env.EMAIL,
-    to: email,
-    subject: "Board Login Alert",
-    html: `<!DOCTYPE html>
+            from: process.env.EMAIL,
+            to: email,
+            subject: "Board Login Alert",
+            html: `<!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -173,7 +173,7 @@ console.log(email, device, ip, dateTime)
         </div>
     </body>
     </html>`
-});
+        });
 
         res.status(200).json({ message: "Board login alert email sent successfully!" });
     } catch (error) {
@@ -192,10 +192,10 @@ app.post("/send-email", async (req, res) => {
 
     try {
         await transporter.sendMail({
-    from: process.env.EMAIL,
-    to: userEmail,
-    subject: `🎉 Registration Confirmed: ${eventName}`,
-    html: `<!DOCTYPE html>
+            from: process.env.EMAIL,
+            to: userEmail,
+            subject: `🎉 Registration Confirmed: ${eventName}`,
+            html: `<!DOCTYPE html>
     <html lang="en">
     <head>
         <meta charset="UTF-8">
@@ -275,7 +275,7 @@ app.post("/send-email", async (req, res) => {
         </div>
     </body>
     </html>`
-});
+        });
 
 
         res.status(200).json({ message: "Email sent successfully!" });
@@ -290,4 +290,72 @@ const PORT = process.env.PORT || 5300;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
-// Enable CORS for your frontend domain
+// Handle form submission
+app.post("/join-club", async (req, res) => {
+    const { email } = req.body;
+
+    // Validate if email is from @vitstudent.ac.in or @vit.ac.in
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@(vitstudent\.ac\.in|vit\.ac\.in)$/;
+
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: "Invalid email! Only VIT emails are allowed." });
+    }
+
+    try {
+        // Email details
+        await transporter.sendMail({
+            from: `"Standards Club" <${process.env.EMAIL_USER}>`,
+            to: email,
+            subject: "🎉 Welcome to Standards Club!",
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px; background-color: #f9f9f9;">
+                    
+                    <!-- Logo -->
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <img src="https://standardsclubvitv.github.io/Standards-Club-VITv/image/logo_club.png" alt="VIT Club Logo" width="150">
+                    </div>
+
+                    <!-- Welcome Message -->
+                    <h2 style="color: #2c3e50; text-align: center;">🎉 Welcome to VIT Club!</h2>
+                    <p style="color: #333; text-align: center; font-size: 16px;">
+                        Thank you for joining VIT Club! We're thrilled to have you on board.
+                    </p>
+                    
+                    <p style="color: #555; text-align: center; font-size: 14px;">
+                        Get ready to participate in exciting events, network with like-minded peers, and grow your skills.
+                    </p>
+
+                    <!-- WhatsApp Group -->
+                    <div style="text-align: center; margin: 20px 0;">
+                        <a href="https://chat.whatsapp.com/IfgRAGxDFDO06qHgkaReer" 
+                           style="display: inline-block; padding: 10px 20px; background-color: #25D366; color: white; font-size: 16px; text-decoration: none; border-radius: 5px;">
+                           ✅ Join Our WhatsApp Group
+                        </a>
+                    </div>
+
+                    <!-- Social Media Links -->
+                    <div style="text-align: center; margin-top: 20px;">
+                        <p style="color: #333; font-size: 14px;">Follow us on:</p>
+                        <a href="https://www.instagram.com/standardsclubvit?igsh=MXMxYzByM282bWNrbA==" style="margin: 0 10px;">
+                            <img src="https://img.icons8.com/color/48/000000/instagram-new.png" width="40">
+                        </a>
+                        <a href="https://in.linkedin.com/in/standards-club-vit-b512a829a" style="margin: 0 10px;">
+                            <img src="https://img.icons8.com/color/48/000000/linkedin.png" width="40">
+                        </a>
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="text-align: center; margin-top: 30px; color: #777; font-size: 12px;">
+                        <p>📍 Standards Club | Vellore Institute of Technology</p>
+                        <p>&copy; 2025 Standards Club. All Rights Reserved.</p>
+                    </div>
+                </div>
+            `,
+        });
+
+        res.status(200).json({ message: "Check your inbox! 📩" });
+    } catch (error) {
+        console.error("Error sending email:", error);
+        res.status(500).json({ message: "Failed to send email" });
+    }
+});
